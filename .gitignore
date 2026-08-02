@@ -1,34 +1,30 @@
-<<<<<<< HEAD
-.terraform/
-*.tfstate
-*.tfstate.*
-*.tfvars
-!*.tfvars.example
-.terraform.lock.hcl
-crash.log
-=======
 # Local .terraform directory
 .terraform/
 .terraform.lock.hcl
 
-# State files
+# State files & Variables
 *.tfstate
 *.tfstate.*
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
 crash.log
 crash.*.log
 
-# Sensitive credentials
+# Sensitive credentials & passwords (NEVER COMMIT TO GIT)
+credentials.txt
+setup_passwords.sh
+deny-stockdashboard-delete.json
 override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
 .env
-credentials.txt
 *.pem
+*.key
 
-# IDEs
+# IDEs & System files
 .idea/
 .vscode/
 *.swp
 .DS_Store
->>>>>>> 62d5928 (Add complete CloudCart EKS infrastructure stack, IAM OIDC, ECR, and deployment scripts)
