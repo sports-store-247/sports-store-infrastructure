@@ -11,32 +11,25 @@ resource "helm_release" "prometheus" {
 
   values = [
     <<-EOT
-    # ---------------------------------------------------------
-    # EXTREME FREE TIER OPTIMIZATIONS (t3.micro = 1GB RAM)
-    # ---------------------------------------------------------
-    
-    # 1. Disable High Availability and extra features
     defaultRules:
-      create: true # Required for Grafana dashboards (generates the CPU/Memory recording rules)
+      create: true
     alertmanager:
-      enabled: false # Disable Alertmanager to save memory (not needed for basic metrics)
+      enabled: false
     kubeStateMetrics:
-      enabled: true # Required for Kubernetes Dashboards (Pods, Deployments, Resources)
+      enabled: true
     nodeExporter:
-      enabled: true # Required for Kubernetes Dashboards (CPU, Memory, Disk)
+      enabled: true
 
-    # 2. Hard-cap Prometheus Server Database Memory
     prometheus:
       prometheusSpec:
-        retention: 12h # Only keep 12 hours of metrics instead of 15 days
+        retention: 12h
         resources:
           requests:
             memory: 256Mi
             cpu: 50m
           limits:
-            memory: 512Mi # Prevent OOMKilled during startup WAL loading
-            
-    # 3. Hard-cap Grafana Memory and Setup Subpath Routing
+            memory: 512Mi
+
     grafana:
       resources:
         requests:
@@ -47,7 +40,6 @@ resource "helm_release" "prometheus" {
       
       grafana.ini:
         server:
-          # Allow Grafana to be served from the /grafana subpath on the Load Balancer
           root_url: "%(protocol)s://%(domain)s/grafana"
           serve_from_sub_path: true
     EOT
@@ -59,13 +51,10 @@ resource "kubernetes_ingress_v1" "grafana" {
     name      = "grafana-ingress"
     namespace = "monitoring"
     annotations = {
-      "alb.ingress.kubernetes.io/scheme"      = "internet-facing"
-      "alb.ingress.kubernetes.io/target-type" = "ip"
-      
-      "alb.ingress.kubernetes.io/group.name"  = "fraudsterslist"
-      "alb.ingress.kubernetes.io/group.order" = "15"
-      
-      # Fix the 503 error by telling AWS to check Grafana's specific health endpoint!
+      "alb.ingress.kubernetes.io/scheme"           = "internet-facing"
+      "alb.ingress.kubernetes.io/target-type"      = "ip"
+      "alb.ingress.kubernetes.io/group.name"       = "sportsstore"
+      "alb.ingress.kubernetes.io/group.order"      = "15"
       "alb.ingress.kubernetes.io/healthcheck-path" = "/grafana/api/health"
     }
   }

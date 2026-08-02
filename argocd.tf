@@ -17,7 +17,6 @@ resource "helm_release" "argocd" {
       params:
         server.insecure: "true"
         server.rootpath: "/argocd"
-        server.basehref: "/argocd"
     EOT
   ]
 }
@@ -27,10 +26,11 @@ resource "kubernetes_ingress_v1" "argocd" {
     name      = "argocd-ingress"
     namespace = "argocd"
     annotations = {
-      "alb.ingress.kubernetes.io/scheme"      = "internet-facing"
-      "alb.ingress.kubernetes.io/target-type" = "ip"
-      "alb.ingress.kubernetes.io/group.name"  = "fraudsterslist"
-      "alb.ingress.kubernetes.io/group.order" = "10"
+      "alb.ingress.kubernetes.io/scheme"           = "internet-facing"
+      "alb.ingress.kubernetes.io/target-type"      = "ip"
+      "alb.ingress.kubernetes.io/group.name"       = "sportsstore"
+      "alb.ingress.kubernetes.io/group.order"      = "10"
+      "alb.ingress.kubernetes.io/healthcheck-path" = "/argocd/healthz"
     }
   }
 
