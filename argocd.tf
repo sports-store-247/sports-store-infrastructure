@@ -42,6 +42,7 @@ resource "kubernetes_ingress_v1" "argocd" {
     ingress_class_name = "alb"
 
     rule {
+      host = "sportsstore.seansite.org"
       http {
         path {
           path      = "/argocd"
