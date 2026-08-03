@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "github_assume_role" {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
       values   = [
-        "repo:sports-store-247/*"
+        "repo:sports-store-247*"
       ]
     }
   }
