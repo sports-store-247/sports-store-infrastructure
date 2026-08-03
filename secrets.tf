@@ -11,11 +11,11 @@ resource "aws_secretsmanager_secret_version" "sports_store_secrets_version" {
     "JWT_SECRET"          = "sports-store-local-jwt-secret",
     "MONGO_ROOT_USERNAME" = "root",
     "MONGO_ROOT_PASSWORD" = "sports-store-local-password",
-    "AUTH_MONGO_URI"      = "mongodb://root:sports-store-local-password@cloudcart-mongodb.cloudcart.svc.cluster.local:27017/auth?authSource=admin",
-    "CATALOG_MONGO_URI"   = "mongodb://root:sports-store-local-password@cloudcart-mongodb.cloudcart.svc.cluster.local:27017/catalog?authSource=admin",
-    "CART_MONGO_URI"      = "mongodb://root:sports-store-local-password@cloudcart-mongodb.cloudcart.svc.cluster.local:27017/cart?authSource=admin",
-    "ORDER_MONGO_URI"     = "mongodb://root:sports-store-local-password@cloudcart-mongodb.cloudcart.svc.cluster.local:27017/order?authSource=admin",
-    "PAYMENT_MONGO_URI"   = "mongodb://root:sports-store-local-password@cloudcart-mongodb.cloudcart.svc.cluster.local:27017/payment?authSource=admin"
+    "AUTH_MONGO_URI"      = "mongodb://root:sports-store-local-password@sports-store-mongodb.sports-store.svc.cluster.local:27017/auth?authSource=admin",
+    "CATALOG_MONGO_URI"   = "mongodb://root:sports-store-local-password@sports-store-mongodb.sports-store.svc.cluster.local:27017/catalog?authSource=admin",
+    "CART_MONGO_URI"      = "mongodb://root:sports-store-local-password@sports-store-mongodb.sports-store.svc.cluster.local:27017/cart?authSource=admin",
+    "ORDER_MONGO_URI"     = "mongodb://root:sports-store-local-password@sports-store-mongodb.sports-store.svc.cluster.local:27017/order?authSource=admin",
+    "PAYMENT_MONGO_URI"   = "mongodb://root:sports-store-local-password@sports-store-mongodb.sports-store.svc.cluster.local:27017/payment?authSource=admin"
   })
 }
 
