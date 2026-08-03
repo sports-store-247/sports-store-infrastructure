@@ -57,6 +57,9 @@ resource "kubernetes_ingress_v1" "grafana" {
       "alb.ingress.kubernetes.io/group.name"       = "sportsstore"
       "alb.ingress.kubernetes.io/group.order"      = "15"
       "alb.ingress.kubernetes.io/healthcheck-path" = "/grafana/api/health"
+      "alb.ingress.kubernetes.io/certificate-arn"  = "arn:aws:acm:us-east-1:765858872029:certificate/9b33a59c-3ac2-47b7-a2f7-6373887377e3"
+      "alb.ingress.kubernetes.io/listen-ports"     = "[{\"HTTPS\":443}, {\"HTTP\":80}]"
+      "alb.ingress.kubernetes.io/ssl-redirect"     = "443"
     }
   }
 
