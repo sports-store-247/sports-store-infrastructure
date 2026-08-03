@@ -14,7 +14,7 @@ resource "helm_release" "prometheus" {
     defaultRules:
       create: true
     alertmanager:
-      enabled: false
+      enabled: true
     kubeStateMetrics:
       enabled: true
     nodeExporter:
@@ -31,6 +31,7 @@ resource "helm_release" "prometheus" {
             memory: 512Mi
 
     grafana:
+      adminPassword: "sports-store-secure-grafana-password"
       resources:
         requests:
           memory: 64Mi
