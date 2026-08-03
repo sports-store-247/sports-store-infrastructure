@@ -35,6 +35,8 @@ resource "kubernetes_ingress_v1" "argocd" {
       "alb.ingress.kubernetes.io/group.name"       = "sportsstore"
       "alb.ingress.kubernetes.io/group.order"      = "10"
       "alb.ingress.kubernetes.io/healthcheck-path" = "/argocd/healthz"
+      "alb.ingress.kubernetes.io/listen-ports"     = "[{\"HTTPS\":443}, {\"HTTP\":80}]"
+      "alb.ingress.kubernetes.io/ssl-redirect"     = "443"
     }
   }
 
