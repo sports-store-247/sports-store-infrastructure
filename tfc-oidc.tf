@@ -35,7 +35,7 @@ data "aws_iam_policy_document" "tfc_assume_role" {
 resource "aws_iam_role" "tfc" {
   name               = "tfc-${var.tfc_workspace}-role"
   assume_role_policy = data.aws_iam_policy_document.tfc_assume_role.json
-  tags               = { Project = "FifaApp" }
+  tags               = { Project = "SportsStore" }
 }
 
 resource "aws_iam_role_policy_attachment" "tfc_admin" {

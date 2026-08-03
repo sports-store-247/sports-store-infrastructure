@@ -15,7 +15,7 @@ resource "aws_iam_role" "alb_controller" {
     }]
   })
 
-  tags = { Project = "FifaApp" }
+  tags = { Project = "SportsStore" }
 }
 
 resource "aws_iam_role_policy_attachment" "alb_controller" {

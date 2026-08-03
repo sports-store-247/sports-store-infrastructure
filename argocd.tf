@@ -16,8 +16,9 @@ resource "helm_release" "argocd" {
     configs:
       params:
         server.insecure: "true"
-        server.rootpath: "/argocd"
-        server.basehref: "/argocd"
+    server:
+      extraArgs:
+        - --insecure
     EOT
   ]
 }
@@ -27,10 +28,13 @@ resource "kubernetes_ingress_v1" "argocd" {
     name      = "argocd-ingress"
     namespace = "argocd"
     annotations = {
-      "alb.ingress.kubernetes.io/scheme"      = "internet-facing"
-      "alb.ingress.kubernetes.io/target-type" = "ip"
-      "alb.ingress.kubernetes.io/group.name"  = "fraudsterslist"
-      "alb.ingress.kubernetes.io/group.order" = "10"
+      "alb.ingress.kubernetes.io/scheme"           = "internet-facing"
+      "alb.ingress.kubernetes.io/target-type"      = "ip"
+      "alb.ingress.kubernetes.io/group.name"       = "sportsstore"
+      "alb.ingress.kubernetes.io/group.order"      = "10"
+      "alb.ingress.kubernetes.io/healthcheck-path" = "/argocd/healthz"
+      "alb.ingress.kubernetes.io/listen-ports"     = "[{\"HTTPS\":443}, {\"HTTP\":80}]"
+      "alb.ingress.kubernetes.io/ssl-redirect"     = "443"
     }
   }
 
@@ -38,9 +42,10 @@ resource "kubernetes_ingress_v1" "argocd" {
     ingress_class_name = "alb"
 
     rule {
+      host = "argocd.seansite.org"
       http {
         path {
-          path      = "/argocd"
+          path      = "/"
           path_type = "Prefix"
           backend {
             service {

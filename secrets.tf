@@ -1,23 +1,27 @@
 # AWS Secrets Manager Secret
 resource "aws_secretsmanager_secret" "mongodb_uri" {
-  name                    = "fraudsterslist/mongo_uri"
-  recovery_window_in_days = 0 # Force immediate deletion for testing
-  tags                    = { Project = "FraudstersList" }
+  name                    = "sports-store/production"
+  description             = "MongoDB URIs and JWT secret for Sports Store"
+  tags                    = { Project = "SportsStore" }
 }
 
-resource "aws_secretsmanager_secret_version" "mongodb_uri_initial" {
+resource "aws_secretsmanager_secret_version" "sports_store_secrets_version" {
   secret_id     = aws_secretsmanager_secret.mongodb_uri.id
-  secret_string = "mongodb+srv://REPLACE_ME:REPLACE_ME@cluster0.mongodb.net/fraudsterslist?retryWrites=true&w=majority"
-  
-  # Ignore changes so if the user updates it manually in AWS, Terraform doesn't revert it
-  lifecycle {
-    ignore_changes = [secret_string]
-  }
+  secret_string = jsonencode({
+    "JWT_SECRET"          = "sports-store-local-jwt-secret",
+    "MONGO_ROOT_USERNAME" = "root",
+    "MONGO_ROOT_PASSWORD" = "sports-store-local-password",
+    "AUTH_MONGO_URI"      = "mongodb://root:sports-store-local-password@cloudcart-mongodb.cloudcart.svc.cluster.local:27017/auth?authSource=admin",
+    "CATALOG_MONGO_URI"   = "mongodb://root:sports-store-local-password@cloudcart-mongodb.cloudcart.svc.cluster.local:27017/catalog?authSource=admin",
+    "CART_MONGO_URI"      = "mongodb://root:sports-store-local-password@cloudcart-mongodb.cloudcart.svc.cluster.local:27017/cart?authSource=admin",
+    "ORDER_MONGO_URI"     = "mongodb://root:sports-store-local-password@cloudcart-mongodb.cloudcart.svc.cluster.local:27017/order?authSource=admin",
+    "PAYMENT_MONGO_URI"   = "mongodb://root:sports-store-local-password@cloudcart-mongodb.cloudcart.svc.cluster.local:27017/payment?authSource=admin"
+  })
 }
 
 # IAM Policy to read the secret
 resource "aws_iam_policy" "external_secrets" {
-  name        = "FraudstersListExternalSecretsPolicy"
+  name        = "SportsStoreExternalSecretsPolicy"
   description = "Allow External Secrets Operator to read from Secrets Manager"
 
   policy = jsonencode({
@@ -42,7 +46,7 @@ module "external_secrets_irsa_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.30"
 
-  role_name = "fraudsterslist-external-secrets-role"
+  role_name = "sports-store-external-secrets-role"
 
   attach_external_secrets_policy = false
   role_policy_arns = {
@@ -52,11 +56,11 @@ module "external_secrets_irsa_role" {
   oidc_providers = {
     ex = {
       provider_arn               = module.eks.oidc_provider_arn
-      namespace_service_accounts = ["external-secrets:external-secrets"]
+      namespace_service_accounts = ["sports-store:app-secrets-sa"]
     }
   }
 
-  tags = { Project = "FraudstersList" }
+  tags = { Project = "SportsStore" }
 }
 
 # Helm Release for External Secrets Operator
