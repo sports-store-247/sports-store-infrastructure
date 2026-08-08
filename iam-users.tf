@@ -82,3 +82,25 @@ output "student_passwords" {
   value       = { for k, v in aws_iam_user_login_profile.students : k => v.password }
   sensitive   = true
 }
+
+resource "aws_iam_role" "cross_account_cloudwatch_read" {
+  name = "CrossAccountCloudWatchReadRole"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::364424789106:root"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "cross_account_cloudwatch_read" {
+  role       = aws_iam_role.cross_account_cloudwatch_read.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess"
+}
