@@ -72,6 +72,11 @@ resource "aws_iam_group_policy_attachment" "ecr_access" {
   policy_arn = aws_iam_policy.ecr_access.arn
 }
 
+resource "aws_iam_group_policy_attachment" "cloudwatch_access" {
+  group      = aws_iam_group.devops_students.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess"
+}
+
 output "student_passwords" {
   description = "Initial passwords for team members — distribute securely"
   value       = { for k, v in aws_iam_user_login_profile.students : k => v.password }
